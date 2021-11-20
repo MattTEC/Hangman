@@ -78,7 +78,8 @@ def setup():
     return word, wordguess, wrong, letters, strikes 
     
 
-def gameloop(word, wordguess, wrong):
+def gameloop(word, wordguess, wrong, false):
+
     screen.fill((255, 255, 255))
     time.sleep(0.5)
     text = ''.join(wordguess)
@@ -102,23 +103,24 @@ def gameloop(word, wordguess, wrong):
     
     
     
-    
-    target_width = 10
-    width, height = default_font.size(text)
-    if width <= target_width:
-        # use the default font
-        textsurface = default_font.render(text, False, (0, 0, 0))
-    else:
-        # use a smaller temp font
-        size_factor = target_width / width
-        #size_factor = round(size_factor)
-        the_size = 50 * size_factor
-        the_size = round(the_size)
-        smaller_font = pygame.font.SysFont("Consolas", 50 * the_size)
-        textsurface = smaller_font.render(text, False, (0, 0, 0))
+    if fail == False:
+        target_width = 10
+        width, height = default_font.size(text)
+        if width <= target_width:
+            # use the default font
+            textsurface = default_font.render(text, False, (0, 0, 0))
+        else:
+            # use a smaller temp font
+            size_factor = target_width / width
+            #size_factor = round(size_factor)
+            the_size = 50 * size_factor
+            the_size = round(the_size)
+            smaller_font = pygame.font.SysFont("Consolas", 50 * the_size)
+            textsurface = smaller_font.render(text, False, (0, 0, 0))
 
-    text_rect = textsurface.get_rect(center=(1280/2, 1200/2))
-    screen.blit(textsurface, text_rect)
+        text_rect = textsurface.get_rect(center=(1280/2, 1200/2))
+        screen.blit(textsurface, text_rect)
+
 
     
     
@@ -180,12 +182,12 @@ while run:
 
                 if win == False and fail == False:
                     strikes, letters, fail, win = add_letter(name, strikes)
-                    go = gameloop(word, wordguess, wrong)
+                    go = gameloop(word, wordguess, wrong, fail)
 
     if win == False and fail == False:
         if play == True and go == True: 
             word, wordguess, wrong, letters, strikes = setup()
-            go = gameloop(word, wordguess, wrong) 
+            go = gameloop(word, wordguess, wrong, fail) 
 
         elif play == False:
             screen.fill((255, 255, 255))
@@ -203,11 +205,31 @@ while run:
             lose = False
             fail = False
             word, wordguess, wrong, letters, strikes = setup()
-            go = gameloop(word, wordguess, wrong)
+            go = gameloop(word, wordguess, wrong, fail)
         if exit_buttton.draw():
             run = False
         
     if fail == True:
+        
+        text = word
+        text = text[:-1]
+        target_width = 10
+        width, height = default_font.size(text)
+        if width <= target_width:
+        # use the default font
+            textsurface = default_font.render(text, False, (0, 0, 0))
+        else:
+            # use a smaller temp font
+            size_factor = target_width / width
+            #size_factor = round(size_factor)
+            the_size = 50 * size_factor
+            the_size = round(the_size)
+            smaller_font = pygame.font.SysFont("Consolas", 50 * the_size)
+            textsurface = smaller_font.render(text, False, (0, 0, 0))
+
+        text_rect = textsurface.get_rect(center=(1280/2, 1200/2))
+        screen.blit(textsurface, text_rect)
+        
         textsurface = special_font.render("You lose!", False, (0, 0, 0))
         screen.blit(textsurface, (790, 100))
         if start_buttton.draw():
@@ -216,7 +238,7 @@ while run:
             lose = False
             fail = False
             word, wordguess, wrong, letters, strikes = setup()
-            go = gameloop(word, wordguess, wrong)
+            go = gameloop(word, wordguess, wrong, fail)
         if exit_buttton.draw():
             run = False    
     
